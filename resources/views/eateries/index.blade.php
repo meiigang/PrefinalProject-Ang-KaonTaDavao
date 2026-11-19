@@ -20,12 +20,16 @@
         <button type="submit" class="rounded bg-amber-500 px-4 py-2 font-semibold">Filter</button>
     </form>
 
-    <div class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+    <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         @forelse ($eateries as $eatery)
             <x-eatery-card :eatery="$eatery" />
         @empty
             <p class="col-span-full">No eateries match your filters.</p>
         @endforelse
     </div>
-    <div class="mt-6">{{ $eateries->links() }}</div>
+    @if ($eateries->hasPages())
+        <div class="mt-10 flex flex-col items-center gap-4 border-t border-orange-200 pt-6">
+            {{ $eateries->onEachSide(1)->links() }}
+        </div>
+    @endif
 @endsection

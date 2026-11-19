@@ -6,7 +6,7 @@
         <title>@yield('title', "Kaon Ta! Davao Ang's Food Guide")</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="min-h-screen bg-slate-100 text-slate-900">
+    <body class="min-h-screen font-sans text-stone-900">
         @include('partials.nav')
         @include('partials.flash')
         <main class="mx-auto max-w-6xl px-4 py-8">
