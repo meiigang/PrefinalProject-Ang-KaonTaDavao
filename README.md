@@ -1,47 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Kaon Ta! Davao - Ang's Food Guide
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**Full name:** Megan Ang
 
-## About Laravel
+A Laravel 12 guide for Davao City carinderias and eateries, featuring districts, permits, dishes, features, and resident reviews.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Setup
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Run the following commands from the project root:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate:fresh --seed
+npm install
+npm run build
+php artisan serve
+```
 
-## Learning Laravel
+## Personalized Data
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Districts
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Poblacion
+- Talomo
+- Agdao
+- Buhangin
+- Toril
+- Bunawan
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Features
 
+- Suki ni Ang
+- Budget Meal
+- Halal
+- Open 24 Hours
+- Aircon
+- Vegan-Friendly
 
-## Contributing
+### Seeded Users
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Name      | Email                | Password   |
+| --------- | -------------------- | ---------- |
+| Megan Ang | ang@kaonta.test      | kaonta2026 |
+| Tita Ang  | tita.ang@kaonta.test | kaonta2026 |
 
-## Code of Conduct
+### Hand-made Eatery
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Name: Carinderia ni Ang
+- Slug: `carinderia-ni-ang`
+- District: Poblacion
+- Address: San Pedro St., Poblacion, Davao City
+- Price range: Budget
+- Specialty: Tinolang Manok
+- Features: Suki ni Ang and Budget Meal
+- Permit: DVO-2026-0808
+- Permit expiry: August 8, 2027 (`2027-08-08`)
 
-## Security Vulnerabilities
+### Hand-made Eatery Dishes
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Dish            |   Price | Bestseller |
+| --------------- | ------: | ---------- |
+| Tinolang Manok  |  ₱85.00 | Yes        |
+| Kinilaw na Tuna | ₱120.00 | No         |
+| Durian Shake    |  ₱75.00 | No         |
 
-## License
+## Eloquent Relationships
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Relationship                      | Type                              | Why it fits                                                                                                              |
+| --------------------------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| District -> Eatery                | `hasMany` / `belongsTo`           | One district can contain many eateries, and each eatery belongs to exactly one district.                                 |
+| Eatery -> Dish                    | `hasMany` / `belongsTo`           | An eatery offers many dishes, while each dish belongs to one eatery.                                                     |
+| Eatery -> Review                  | `hasMany` / `belongsTo`           | A resident may contribute several reviews to an eatery, and every review belongs to one eatery.                          |
+| User -> Review                    | `hasMany` / `belongsTo`           | A reviewer can write many reviews, but each review has one selected reviewer.                                            |
+| Eatery -> Permit                  | `hasOne` / `belongsTo`            | Each eatery has one business permit, and the permit belongs to that eatery.                                              |
+| Eatery <-> Feature                | `belongsToMany` / `belongsToMany` | An eatery can have many features, and a feature can apply to many eateries through `eatery_feature`.                     |
+| District -> Review through Eatery | `hasManyThrough`                  | District pages can count reviews belonging to eateries in the district without directly storing district IDs on reviews. |
+
+## Routes
+
+```text
+GET|HEAD / .. home › HomeController
+ GET|HEAD districts .. districts.index › DistrictController@index
+ GET|HEAD districts/{district} .. districts.show › DistrictController@show
+ GET|HEAD eateries .. eateries.index › EateryController@index
+ POST eateries .. eateries.store › EateryController@store
+ GET|HEAD eateries/create .. eateries.create › EateryController@create
+ GET|HEAD eateries/{eatery} .. eateries.show › EateryController@show
+ PUT|PATCH eateries/{eatery} .. eateries.update › EateryController@update
+ DELETE eateries/{eatery} .. eateries.destroy › EateryController@destroy
+ GET|HEAD eateries/{eatery}/edit .. eateries.edit › EateryController@edit
+ POST eateries/{eatery}/reviews .. eateries.reviews.store › ReviewController@store
+ GET|HEAD reviewers/{user} .. reviewers.show › ReviewerController@show
+ DELETE reviews/{review} .. reviews.destroy › ReviewController@destroy
+
+ Showing [13] routes
+```
+
+## Screenshots
+
+### Eatery List
+
+![Eatery list](screenshots/eatery-list.png)
+
+### Eatery Page with Reviews
+
+![Eatery page with reviews](screenshots/eatery-reviews.png)
+
+### Create Eatery Validation Errors
+
+![Create eatery validation errors](screenshots/eatery-create-errors.png)
