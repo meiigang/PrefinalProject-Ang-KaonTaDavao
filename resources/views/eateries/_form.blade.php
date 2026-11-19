@@ -1,3 +1,7 @@
+@php
+    $eatery = $eatery ?? null;
+@endphp
+
 @if ($errors->any())
     <div class="mb-6 rounded border border-red-300 bg-red-50 p-4 text-red-800">
         <strong>Please correct the following errors:</strong>
@@ -95,7 +99,7 @@
 
     <div>
         <label for="permit_no" class="block font-semibold">Permit number</label>
-        <input id="permit_no" name="permit_no" type="text" value="{{ old('permit_no', $eatery->permit?->permit_no ?? '') }}" class="mt-1 w-full rounded border p-2">
+        <input id="permit_no" name="permit_no" type="text" value="{{ old('permit_no', isset($eatery) && $eatery && $eatery->permit ? $eatery->permit->permit_no : '') }}" class="mt-1 w-full rounded border p-2">
         @error('permit_no')
             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror
@@ -103,7 +107,7 @@
 
     <div>
         <label for="expires_on" class="block font-semibold">Permit expiry date</label>
-        <input id="expires_on" name="expires_on" type="date" value="{{ old('expires_on', $eatery->permit?->expires_on?->format('Y-m-d') ?? '') }}" class="mt-1 w-full rounded border p-2">
+        <input id="expires_on" name="expires_on" type="date" value="{{ old('expires_on', isset($eatery) && $eatery && $eatery->permit ? $eatery->permit->expires_on->format('Y-m-d') : '') }}" class="mt-1 w-full rounded border p-2">
         @error('expires_on')
             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror

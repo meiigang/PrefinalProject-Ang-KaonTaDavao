@@ -50,8 +50,9 @@ class EateryController extends Controller
     {
         $districts = District::orderBy('name')->get();
         $features = Feature::orderBy('name')->get();
+        $eatery = null;
 
-        return view('eateries.create', compact('districts', 'features'));
+        return view('eateries.create', compact('eatery', 'districts', 'features'));
     }
 
     public function store(StoreEateryRequest $request)
