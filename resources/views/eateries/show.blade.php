@@ -92,7 +92,51 @@
                     <h3 class="text-xl font-bold">Write a Review</h3>
                     <form method="POST" action="{{ route('eateries.reviews.store', $eatery) }}" class="mt-4">
                         @csrf
-                        <p class="text-sm text-slate-600">Review form placeholder.</p>
+                        @if ($errors->any())
+                            <div class="mb-4 rounded border border-red-300 bg-red-50 p-3 text-red-800">
+                                <ul class="list-disc pl-5">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        <div>
+                            <label for="user_id" class="block font-semibold">Reviewer</label>
+                            <select id="user_id" name="user_id" class="mt-1 w-full rounded border p-2">
+                                <option value="">Choose a reviewer</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}" @selected(old('user_id') == $user->id)>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('user_id')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-4">
+                            <label for="rating" class="block font-semibold">Rating</label>
+                            <select id="rating" name="rating" class="mt-1 w-full rounded border p-2">
+                                <option value="">Choose a rating</option>
+                                @for ($rating = 1; $rating <= 5; $rating++)
+                                    <option value="{{ $rating }}" @selected(old('rating') == $rating)>
+                                        {{ $rating }}
+                                    </option>
+                                @endfor
+                            </select>
+                            @error('rating')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mt-4">
+                            <label for="body" class="block font-semibold">Review</label>
+                            <textarea id="body" name="body" rows="4" class="mt-1 w-full rounded border p-2">{{ old('body') }}</textarea>
+                            @error('body')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <button type="submit" class="mt-4 rounded bg-amber-500 px-5 py-2 font-semibold">Post Review</button>
                     </form>
                 </section>
             @else
